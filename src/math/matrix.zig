@@ -8,8 +8,8 @@ const Mat = struct {
 
     pub fn translate(self: *Mat, translation_vector: @Vector(3, f32)) void {
         self.matrix[self.size - 1] = translation_vector[0];
-        self.matrix[self.size * 2 - 1] = translation_vector[0];
-        self.matrix[self.size * 3 - 1] = translation_vector[0];
+        self.matrix[self.size * 2 - 1] = translation_vector[1];
+        self.matrix[self.size * 3 - 1] = translation_vector[2];
     }
 
     pub fn scale(self: *Mat, scale_number: f32) void {
@@ -19,19 +19,21 @@ const Mat = struct {
         self.matrix[10] *= scale_number;
     }
 
-    // TODO: redo rotation logic. We want a vector(1.0, 0.33, 0.5) and each element * degrees applied to that axis
     pub fn rotate(self: *Mat, degrees: f32, axis: @Vector(3, f32)) void {
         quat.applyRotation(degrees, axis, self.matrix);
+    }
 
-        //        if (axis[0] != 0) {
-        //            rotateX(self.matrix, degrees * axis[0]);
-        //        }
-        //        if (axis[1] != 0) {
-        //            rotateY(self.matrix, degrees * axis[1]);
-        //        }
-        //        if (axis[2] != 0) {
-        //            rotateZ(self.matrix, degrees * axis[2]);
-        //        }
+    pub fn projectPerspective(self: *Mat, fov: f32, aspect_ratio: f32, near_plane: f32, far_plane: f32) void {
+        const radians = trig.degreesToRadians(fov);
+        const top_edge = near_plane * @tan(radians / 2);
+        //        const right_edge = aspect_ratio * top_edge;
+
+        self.matrix[0] = 1 / aspect_ratio * top_edge;
+        self.matrix[5] = 1 / top_edge;
+        self.matrix[10] = 0 - (far_plane + near_plane) / (far_plane - near_plane);
+        self.matrix[11] = 0 - 2 * far_plane * near_plane / (far_plane - near_plane);
+        self.matrix[14] = -1;
+        self.matrix[15] = 0;
     }
 };
 

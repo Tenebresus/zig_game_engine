@@ -6,8 +6,9 @@ const window = @import("window.zig");
 const shader = @import("shader.zig");
 const matrix = @import("math/matrix.zig");
 const quat = @import("math/quaternion.zig");
+const poly = @import("poly.zig");
 
-const vertices = [_]f32{ -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 1.0, 0.0, 0.5, -0.5, 0.0, 0.0, 0.0, 1.0 };
+//const vertices = [_]f32{ -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 1.0, 0.0, 0.5, -0.5, 0.0, 0.0, 0.0, 1.0 };
 
 pub fn main() !void {
     const window_process = try window.WindowProcess.init();
@@ -19,6 +20,11 @@ pub fn main() !void {
 
     const shaderProgram = shader_process.getShaderProgram();
 
+    var poly_allocator = try poly.init(allocator);
+    defer poly_allocator.deinit();
+
+    const triangle = try poly_allocator.createTriangle();
+
     var VAO: [1]gl.uint = undefined;
     var VBO: [1]gl.uint = undefined;
 
@@ -27,7 +33,8 @@ pub fn main() !void {
 
     gl.BindVertexArray(VAO[0]);
     gl.BindBuffer(gl.ARRAY_BUFFER, VBO[0]);
-    gl.BufferData(gl.ARRAY_BUFFER, @sizeOf(f32) * vertices.len, &vertices, gl.STATIC_DRAW);
+    //    gl.BufferData(gl.ARRAY_BUFFER, @sizeOf(f32) * vertices.len, &vertices, gl.STATIC_DRAW);
+    gl.BufferData(gl.ARRAY_BUFFER, @sizeOf(f32) * triangle.i_len * 6, triangle.getVertices().ptr, gl.STATIC_DRAW);
 
     gl.VertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, @sizeOf(f32) * 6, 0);
     gl.EnableVertexAttribArray(0);
@@ -37,7 +44,8 @@ pub fn main() !void {
 
     var matrix_allocator = try matrix.init(allocator);
     defer matrix_allocator.deinit();
-    var mat4 = try matrix_allocator.mat4();
+
+    var model_transformation = try matrix_allocator.mat4();
     //    mat4.translate(@Vector(3, f32){ -0.2, 0, 0 });
     var lol: f32 = 0.0;
 
@@ -52,9 +60,9 @@ pub fn main() !void {
         gl.UseProgram(shaderProgram);
 
         //        mat4.rotate(lol, @Vector(3, f32){ 0, 0, 1 });
-        mat4.rotate(lol, @Vector(3, f32){ 1, 1, 1 });
-        const transform_location = gl.GetUniformLocation(shaderProgram, "transform");
-        gl.UniformMatrix4fv(transform_location, 1, gl.FALSE, mat4.matrix.ptr);
+        model_transformation.rotate(lol, @Vector(3, f32){ 1.0, 1.0, 1.0 });
+        const model_location = gl.GetUniformLocation(shaderProgram, "model");
+        gl.UniformMatrix4fv(model_location, 1, gl.FALSE, model_transformation.matrix.ptr);
 
         lol += 0.5;
         gl.DrawArrays(gl.TRIANGLES, 0, 3);
