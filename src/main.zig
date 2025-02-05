@@ -5,6 +5,7 @@ const gl = @import("gl");
 const window = @import("window.zig");
 const shader = @import("shader.zig");
 const matrix = @import("math/matrix.zig");
+const quat = @import("math/quaternion.zig");
 
 const vertices = [_]f32{ -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 1.0, 0.0, 0.5, -0.5, 0.0, 0.0, 0.0, 1.0 };
 
@@ -38,7 +39,6 @@ pub fn main() !void {
     defer matrix_allocator.deinit();
     var mat4 = try matrix_allocator.mat4();
     //    mat4.translate(@Vector(3, f32){ -0.2, 0, 0 });
-
     var lol: f32 = 0.0;
 
     while (!window_process.window.shouldClose()) {
@@ -51,7 +51,8 @@ pub fn main() !void {
 
         gl.UseProgram(shaderProgram);
 
-        mat4.rotate(lol, @Vector(3, f32){ 0.2, 0, 0 });
+        //        mat4.rotate(lol, @Vector(3, f32){ 0, 0, 1 });
+        mat4.rotate(lol, @Vector(3, f32){ 1, 1, 1 });
         const transform_location = gl.GetUniformLocation(shaderProgram, "transform");
         gl.UniformMatrix4fv(transform_location, 1, gl.FALSE, mat4.matrix.ptr);
 

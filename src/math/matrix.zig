@@ -1,5 +1,6 @@
 const std = @import("std");
 const trig = @import("trig.zig");
+const quat = @import("quaternion.zig");
 
 const Mat = struct {
     size: u8,
@@ -20,15 +21,17 @@ const Mat = struct {
 
     // TODO: redo rotation logic. We want a vector(1.0, 0.33, 0.5) and each element * degrees applied to that axis
     pub fn rotate(self: *Mat, degrees: f32, axis: @Vector(3, f32)) void {
-        if (axis[0] != 0) {
-            rotateX(self.matrix, degrees * axis[0]);
-        }
-        if (axis[1] == 1) {
-            rotateY(self.matrix, degrees);
-        }
-        if (axis[2] == 1) {
-            rotateZ(self.matrix, degrees);
-        }
+        quat.applyRotation(degrees, axis, self.matrix);
+
+        //        if (axis[0] != 0) {
+        //            rotateX(self.matrix, degrees * axis[0]);
+        //        }
+        //        if (axis[1] != 0) {
+        //            rotateY(self.matrix, degrees * axis[1]);
+        //        }
+        //        if (axis[2] != 0) {
+        //            rotateZ(self.matrix, degrees * axis[2]);
+        //        }
     }
 };
 
@@ -73,7 +76,7 @@ pub fn init(allocator: std.mem.Allocator) !MatAllocator {
 
 fn rotateX(matrix: []f32, degrees: f32) void {
     // TODO: fix manual index replacement
-    matrix[5] = if (matrix[5] == 0) @cos(trig.degreesToRadians(degrees)) * matrix[5] else @cos(trig.degreesToRadians(degrees));
+    matrix[5] = @cos(trig.degreesToRadians(degrees));
     matrix[6] = 0 - @sin(trig.degreesToRadians(degrees));
     matrix[9] = @sin(trig.degreesToRadians(degrees));
     matrix[10] = @cos(trig.degreesToRadians(degrees));
