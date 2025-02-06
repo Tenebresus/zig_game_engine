@@ -28,10 +28,12 @@ const Mat = struct {
         const top_edge = near_plane * @tan(radians / 2);
         //        const right_edge = aspect_ratio * top_edge;
 
-        self.matrix[0] = 1 / aspect_ratio * top_edge;
+        self.matrix[0] = 1 / (aspect_ratio * top_edge);
         self.matrix[5] = 1 / top_edge;
-        self.matrix[10] = 0 - (far_plane + near_plane) / (far_plane - near_plane);
-        self.matrix[11] = 0 - 2 * far_plane * near_plane / (far_plane - near_plane);
+        self.matrix[10] = 0 - ((far_plane + near_plane) / (far_plane - near_plane));
+        self.matrix[11] = 0 - ((2 * far_plane * near_plane) / (far_plane - near_plane));
+        //        self.matrix[10] = 0 - (far_plane + near_plane) / (far_plane - near_plane);
+        //        self.matrix[11] = 0 - 2 * far_plane * near_plane / (far_plane - near_plane);
         self.matrix[14] = -1;
         self.matrix[15] = 0;
     }

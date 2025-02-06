@@ -22,6 +22,98 @@ const PolyAllocator = struct {
         return Polygon{ .vertices = vertices, .u_len = 3, .i_len = 3 };
     }
 
+    pub fn createCube(self: *PolyAllocator) !Polygon {
+        var vertices = try self.allocator.alloc(Vertex, 36);
+        self.allocated_vertices[self.allocation_counter] = vertices;
+        self.allocation_counter += 1;
+
+        vertices[0].setLocation(-0.5, -0.5, -0.5);
+        vertices[1].setLocation(0.5, -0.5, -0.5);
+        vertices[2].setLocation(0.5, 0.5, -0.5);
+        vertices[3].setLocation(0.5, 0.5, -0.5);
+        vertices[4].setLocation(-0.5, 0.5, -0.5);
+        vertices[5].setLocation(-0.5, -0.5, -0.5);
+
+        vertices[0].setColour(1.0, 0.0, 0.0);
+        vertices[1].setColour(1.0, 0.0, 0.0);
+        vertices[2].setColour(1.0, 0.0, 0.0);
+        vertices[3].setColour(1.0, 0.0, 0.0);
+        vertices[4].setColour(1.0, 0.0, 0.0);
+        vertices[5].setColour(1.0, 0.0, 0.0);
+
+        vertices[6].setLocation(-0.5, -0.5, 0.5);
+        vertices[7].setLocation(0.5, -0.5, 0.5);
+        vertices[8].setLocation(0.5, 0.5, 0.5);
+        vertices[9].setLocation(0.5, 0.5, 0.5);
+        vertices[10].setLocation(-0.5, 0.5, 0.5);
+        vertices[11].setLocation(-0.5, -0.5, 0.5);
+
+        vertices[6].setColour(0.0, 1.0, 0.0);
+        vertices[7].setColour(0.0, 1.0, 0.0);
+        vertices[8].setColour(0.0, 1.0, 0.0);
+        vertices[9].setColour(0.0, 1.0, 0.0);
+        vertices[10].setColour(0.0, 1.0, 0.0);
+        vertices[11].setColour(0.0, 1.0, 0.0);
+
+        vertices[12].setLocation(-0.5, 0.5, 0.5);
+        vertices[13].setLocation(-0.5, 0.5, -0.5);
+        vertices[14].setLocation(-0.5, -0.5, -0.5);
+        vertices[15].setLocation(-0.5, -0.5, -0.5);
+        vertices[16].setLocation(-0.5, -0.5, 0.5);
+        vertices[17].setLocation(-0.5, 0.5, 0.5);
+
+        vertices[12].setColour(0.0, 0.0, 1.0);
+        vertices[13].setColour(0.0, 0.0, 1.0);
+        vertices[14].setColour(0.0, 0.0, 1.0);
+        vertices[15].setColour(0.0, 0.0, 1.0);
+        vertices[16].setColour(0.0, 0.0, 1.0);
+        vertices[17].setColour(0.0, 0.0, 1.0);
+
+        vertices[18].setLocation(0.5, 0.5, 0.5);
+        vertices[19].setLocation(0.5, 0.5, -0.5);
+        vertices[20].setLocation(0.5, -0.5, -0.5);
+        vertices[21].setLocation(0.5, -0.5, -0.5);
+        vertices[22].setLocation(0.5, -0.5, 0.5);
+        vertices[23].setLocation(0.5, 0.5, 0.5);
+
+        vertices[18].setColour(0.0, 1.0, 1.0);
+        vertices[19].setColour(0.0, 1.0, 1.0);
+        vertices[20].setColour(0.0, 1.0, 1.0);
+        vertices[21].setColour(0.0, 1.0, 1.0);
+        vertices[22].setColour(0.0, 1.0, 1.0);
+        vertices[23].setColour(0.0, 1.0, 1.0);
+
+        vertices[24].setLocation(-0.5, -0.5, -0.5);
+        vertices[25].setLocation(0.5, -0.5, -0.5);
+        vertices[26].setLocation(0.5, -0.5, 0.5);
+        vertices[27].setLocation(0.5, -0.5, 0.5);
+        vertices[28].setLocation(-0.5, -0.5, 0.5);
+        vertices[29].setLocation(-0.5, -0.5, -0.5);
+
+        vertices[24].setColour(1.0, 1.0, 0.0);
+        vertices[25].setColour(1.0, 1.0, 0.0);
+        vertices[26].setColour(1.0, 1.0, 0.0);
+        vertices[27].setColour(1.0, 1.0, 0.0);
+        vertices[28].setColour(1.0, 1.0, 0.0);
+        vertices[29].setColour(1.0, 1.0, 0.0);
+
+        vertices[30].setLocation(-0.5, 0.5, -0.5);
+        vertices[31].setLocation(0.5, 0.5, -0.5);
+        vertices[32].setLocation(0.5, 0.5, 0.5);
+        vertices[33].setLocation(0.5, 0.5, 0.5);
+        vertices[34].setLocation(-0.5, 0.5, 0.5);
+        vertices[35].setLocation(-0.5, 0.5, -0.5);
+
+        vertices[30].setColour(1.0, 0.0, 1.0);
+        vertices[31].setColour(1.0, 0.0, 1.0);
+        vertices[32].setColour(1.0, 0.0, 1.0);
+        vertices[33].setColour(1.0, 0.0, 1.0);
+        vertices[34].setColour(1.0, 0.0, 1.0);
+        vertices[35].setColour(1.0, 0.0, 1.0);
+
+        return Polygon{ .vertices = vertices, .u_len = 36, .i_len = 36 };
+    }
+
     pub fn deinit(self: PolyAllocator) void {
         for (0..self.allocation_counter) |i| {
             self.allocator.free(self.allocated_vertices[i]);
@@ -59,9 +151,9 @@ const Vertex = struct {
     y: f32,
     z: f32,
 
-    r: f32,
-    g: f32,
-    b: f32,
+    r: f32 = 1,
+    g: f32 = 1,
+    b: f32 = 1,
 
     fn setLocation(self: *Vertex, x: f32, y: f32, z: f32) void {
         self.x = x;

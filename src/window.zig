@@ -5,6 +5,9 @@ const gl = @import("gl");
 const glfw_log = std.log.scoped(.glfw);
 const gl_log = std.log.scoped(.gl);
 
+pub const width: u16 = 640;
+pub const height: u16 = 480;
+
 var gl_procs: gl.ProcTable = undefined;
 
 fn logGLFWError(error_code: glfw.ErrorCode, description: [:0]const u8) void {
@@ -23,7 +26,7 @@ pub const WindowProcess = struct {
         }
 
         // Create our window, specifying that we want to use OpenGL.
-        const window = glfw.Window.create(640, 480, "mach-glfw + OpenGL", null, null, .{
+        const window = glfw.Window.create(width, height, "mach-glfw + OpenGL", null, null, .{
             .context_version_major = gl.info.version_major,
             .context_version_minor = gl.info.version_minor,
             .opengl_profile = .opengl_core_profile,
