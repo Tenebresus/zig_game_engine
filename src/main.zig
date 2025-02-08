@@ -56,6 +56,7 @@ pub fn main() !void {
 
     var view_point_z: f32 = -50;
     var view_point_x: f32 = 0;
+    var view_point_y: f32 = 0;
     var view_transformation = try matrix_allocator.mat4();
     //    view_transformation.translate(@Vector(3, f32){ 0.0, 0.0, view_point });
 
@@ -85,6 +86,14 @@ pub fn main() !void {
             view_point_x -= 0.1;
         }
 
+        if (window_process.window.getKey(.space) == glfw.Action.press) {
+            view_point_y -= 0.1;
+        }
+
+        if (window_process.window.getKey(.left_shift) == glfw.Action.press) {
+            view_point_y += 0.1;
+        }
+
         gl.ClearColor(0.2, 0.3, 0.3, 1.0);
         gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -94,7 +103,7 @@ pub fn main() !void {
         //        const model_location = gl.GetUniformLocation(shaderProgram, "model");
         //        gl.UniformMatrix4fv(model_location, 1, gl.FALSE, model_transformation.matrix.ptr);
 
-        view_transformation.translate(@Vector(3, f32){ view_point_x, 0.0, view_point_z });
+        view_transformation.translate(@Vector(3, f32){ view_point_x, view_point_y, view_point_z });
         const view_location = gl.GetUniformLocation(shaderProgram, "view");
         gl.UniformMatrix4fv(view_location, 1, gl.FALSE, view_transformation.matrix.ptr);
 
