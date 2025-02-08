@@ -77,27 +77,3 @@ pub fn init(allocator: std.mem.Allocator) !MatAllocator {
     const allocated_matrices = try allocator.alloc([]f32, 1024);
     return MatAllocator{ .allocator = allocator, .allocated_matrices = allocated_matrices, .allocated_matrices_count = 0 };
 }
-
-fn rotateX(matrix: []f32, degrees: f32) void {
-    // TODO: fix manual index replacement
-    matrix[5] = @cos(trig.degreesToRadians(degrees));
-    matrix[6] = 0 - @sin(trig.degreesToRadians(degrees));
-    matrix[9] = @sin(trig.degreesToRadians(degrees));
-    matrix[10] = @cos(trig.degreesToRadians(degrees));
-}
-
-fn rotateY(matrix: []f32, degrees: f32) void {
-    // TODO: fix manual index replacement
-    matrix[0] = @cos(trig.degreesToRadians(degrees));
-    matrix[2] = @sin(trig.degreesToRadians(degrees));
-    matrix[8] = 0 - @sin(trig.degreesToRadians(degrees));
-    matrix[10] = @cos(trig.degreesToRadians(degrees));
-}
-
-fn rotateZ(matrix: []f32, degrees: f32) void {
-    // TODO: fix manual index replacement
-    matrix[0] = @cos(trig.degreesToRadians(degrees));
-    matrix[1] = 0 - @sin(trig.degreesToRadians(degrees));
-    matrix[4] = @sin(trig.degreesToRadians(degrees));
-    matrix[5] = @cos(trig.degreesToRadians(degrees));
-}

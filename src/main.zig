@@ -10,6 +10,11 @@ const poly = @import("poly.zig");
 
 //const vertices = [_]f32{ -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 1.0, 0.0, 0.5, -0.5, 0.0, 0.0, 0.0, 1.0 };
 
+const positions = [_]@Vector(3, f32){
+    @Vector(3, f32){ -0.9, 0.3, -20 },
+    @Vector(3, f32){ 0.9, -0.3, 20 },
+};
+
 pub fn main() !void {
     const window_process = try window.WindowProcess.init();
     defer window_process.deinit();
@@ -55,9 +60,7 @@ pub fn main() !void {
     //    view_transformation.translate(@Vector(3, f32){ 0.0, 0.0, view_point });
 
     var projection_transformation = try matrix_allocator.mat4();
-    projection_transformation.projectPerspective(45, 16 / 9, 0.1, 100);
-
-    std.debug.print("{any}", .{projection_transformation});
+    projection_transformation.projectPerspective(45, 16 / 9, 0.1, 300);
 
     var lol: f32 = 0.0;
 
@@ -87,9 +90,9 @@ pub fn main() !void {
 
         gl.UseProgram(shaderProgram);
 
-        model_transformation.rotate(lol, @Vector(3, f32){ 1.0, 1.0, 1.0 });
-        const model_location = gl.GetUniformLocation(shaderProgram, "model");
-        gl.UniformMatrix4fv(model_location, 1, gl.FALSE, model_transformation.matrix.ptr);
+        //        model_transformation.rotate(lol, @Vector(3, f32){ 1.0, 1.0, 1.0 });
+        //        const model_location = gl.GetUniformLocation(shaderProgram, "model");
+        //        gl.UniformMatrix4fv(model_location, 1, gl.FALSE, model_transformation.matrix.ptr);
 
         view_transformation.translate(@Vector(3, f32){ view_point_x, 0.0, view_point_z });
         const view_location = gl.GetUniformLocation(shaderProgram, "view");
@@ -98,8 +101,15 @@ pub fn main() !void {
         const projection_location = gl.GetUniformLocation(shaderProgram, "projection");
         gl.UniformMatrix4fv(projection_location, 1, gl.FALSE, projection_transformation.matrix.ptr);
 
+        for (positions) |position| {
+            model_transformation.translate(position);
+            model_transformation.rotate(lol, @Vector(3, f32){ 1.0, 1.0, 1.0 });
+            const model_location = gl.GetUniformLocation(shaderProgram, "model");
+            gl.UniformMatrix4fv(model_location, 1, gl.FALSE, model_transformation.matrix.ptr);
+            gl.DrawArrays(gl.TRIANGLES, 0, 36);
+        }
+
         lol += 0.5;
-        gl.DrawArrays(gl.TRIANGLES, 0, 36);
 
         glfw.pollEvents();
         window_process.window.swapBuffers();
