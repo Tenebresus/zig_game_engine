@@ -7,7 +7,7 @@ Current progress:
 |Subject|status|
 |-------|------|
 |shader program| ✔️ |
-|matrix allacotor| ✔️|
+|matrix allocator| ✔️|
 |quaternion rotation support|✔️|
 |perspective projection support|✔️|
 |simple camera movement|✔️|
