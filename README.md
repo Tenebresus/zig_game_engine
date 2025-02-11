@@ -1,5 +1,7 @@
 # WIP
 
+This is meant to be a learning expierence. My end goal is to create a simple, low polly game (using models from the engines internal model creator) with simple physics.
+
 Current progress:
 
 |Subject|status|
@@ -15,6 +17,9 @@ Current progress:
 |mouse support||
 |texture loader||
 |model loader||
-|customer low polly model builder||
+|custom low polly model builder||
+|collision detection||
+|gravity||
 
+Preview:
 
