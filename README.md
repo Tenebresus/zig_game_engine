@@ -23,3 +23,5 @@ Current progress:
 
 Preview:
 
+![](img/cubes.gif)
+
